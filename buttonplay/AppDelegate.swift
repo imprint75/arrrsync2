@@ -39,13 +39,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func doSomething(sender: NSButton) {
         commandOutput.stringValue = ""
-        commandOutput.stringValue.extend("----------------\n")
 
         let targetPath = syncOption.target?.path
         let targetAbsPath = syncOption.target?.absoluteString
         let sourcePath = syncOption.origin?.path
         let sourceAbsPath = syncOption.origin?.absoluteString
         
+        let RD_SOURCE = "/usr/bin/rsync"
         var RD_SOURCE_ARGS = ["-rv"]
         
         if dryRun.state == 1 {
@@ -54,7 +54,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             commandOutput.stringValue.extend("dry run button is not checked.\nsyncing...\n")
         }
-        
         
         switch (targetPath, targetAbsPath, sourcePath, sourceAbsPath){
         case let (.Some(targetPath), .Some(targetAbsPath), .Some(sourcePath), .Some(sourceAbsPath)):
@@ -66,10 +65,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             commandOutput.stringValue.extend("I am the default.  You didn't select target and source.\n")
         }
         
-        commandOutput.stringValue.extend("----------------\n")
-        
         var done = false
-        let RD_SOURCE = "/usr/bin/rsync"
         var shell: NSTask = NSTask()
         shell.launchPath = RD_SOURCE
         shell.arguments = RD_SOURCE_ARGS
@@ -77,23 +73,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let pipe = NSPipe()
         shell.standardOutput = pipe
         shell.terminationHandler = {task -> Void in
-            println("donezers")
             dispatch_async(dispatch_get_main_queue(), {
                 done = true
             })
         }
 
-        commandOutput.stringValue.extend("launch\n")
         shell.launch()
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output: String = NSString(data: data, encoding: NSUTF8StringEncoding)
         commandOutput.stringValue.extend(output)
-        commandOutput.stringValue.extend("\n")
         var theRL: NSRunLoop = NSRunLoop.currentRunLoop()
         var date : AnyObject! = NSDate.distantFuture()
         
         while !done && theRL.runMode(NSDefaultRunLoopMode, beforeDate: date as NSDate) {}
-        commandOutput.stringValue.extend("completed")
+        commandOutput.stringValue.extend("done")
     }
     
     func getAbsoluteURLOfDirectory() -> NSURL {
