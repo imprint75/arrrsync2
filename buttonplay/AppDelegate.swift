@@ -44,7 +44,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let targetAbsPath = syncOption.target?.absoluteString
         let sourcePath = syncOption.origin?.path
         let sourceAbsPath = syncOption.origin?.absoluteString
-        
         let RD_SOURCE = "/usr/bin/rsync"
         var RD_SOURCE_ARGS = ["-rv"]
         
