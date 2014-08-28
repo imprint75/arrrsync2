@@ -24,22 +24,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var dryRun: NSButton!
 
     var syncOption = SyncMetaData()
+
+    func applicationDidFinishLaunching(aNotification: NSNotification?) {
+        // Insert code here to initialize your application
+    }
+
+    func applicationWillTerminate(aNotification: NSNotification?) {
+        // Insert code here to tear down your application
+    }
     
     @IBAction func targetButtonAction(sender: NSButton) {
+        buttonClickedSound()
         let targetDirectory = getAbsoluteURLOfDirectory()
         targetText.stringValue = targetDirectory.path
         syncOption.target = targetDirectory
     }
     
     @IBAction func originButtonAction(sender: NSButton) {
+        buttonClickedSound()
         let targetDirectory = getAbsoluteURLOfDirectory()
         originText.stringValue = targetDirectory.path
         syncOption.origin = targetDirectory
     }
     
     @IBAction func doSomething(sender: NSButton) {
+        processFinishedSound()
         commandOutput.stringValue = ""
-
         let targetPath = syncOption.target?.path
         let targetAbsPath = syncOption.target?.absoluteString
         let sourcePath = syncOption.origin?.path
@@ -101,15 +111,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return selected
     }
 
-    
-    func applicationDidFinishLaunching(aNotification: NSNotification?) {
-        // Insert code here to initialize your application
+    func buttonClickedSound() {
+        NSSound(named: "Frog.aiff").play()
     }
 
-    func applicationWillTerminate(aNotification: NSNotification?) {
-        // Insert code here to tear down your application
+    func processFinishedSound() {
+        NSSound(named: "Tink.aiff").play()
     }
-
-
 }
 
